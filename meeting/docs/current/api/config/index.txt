@@ -1,0 +1,3 @@
+meeting.config.desk
+meeting.config.docs
+meeting.config
