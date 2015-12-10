@@ -62,3 +62,15 @@ def make_orientation_meeting(doc, method):
 	meeting.insert()
 
 	frappe.msgprint(_("Orientation meeting created"))
+
+def update_minute_status(doc, method=None):
+	"""Update minute status to Closed if ToDo is closed or deleted"""
+	if doc.reference_type != "Meeting" or doc.flags.from_meeting:
+		return
+
+	if method=="on_trash" or doc.status=="Closed":
+		meeting = frappe.get_doc(doc.reference_type, doc.reference_name)
+		for minute in meeting.minutes:
+			if minute.todo == doc.name:
+				minute.db_set("todo", None, update_modified=False)
+				minute.db_set("status", "Closed", update_modified=False)
