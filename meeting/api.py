@@ -9,7 +9,7 @@ def send_invitation_emails(meeting):
 
 	if meeting.status == "Planned":
 		if meeting.attendees:
-				message = frappe.get_template("templates/emails/meeting_invitation.html").render({
+				message = frappe.get_template("templates/meeting_invitation.html").render({
 					"sender":sender_fullname,
 					"date":meeting.date,
 					"from_time":meeting.from_time,
