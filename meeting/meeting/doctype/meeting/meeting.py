@@ -32,6 +32,17 @@ class Meeting(WebsiteGenerator):
 
 			found.append(attendee.attendee)
 
+	 #Meeting manager doesn't allow to assign same user at same time in another meeting
+          def check_for_overlapping_meeting(self):
+		  for attendee in self.attendees:
+			  if frappe.db.exists('Meetings', {
+				  'attendees': ['like', f'%{attendee.attendee}%'],
+				  'from_time': ['between', (self.from_time, self.to_time)],
+				  'to_time': ['between', (self.from_time, self.to_time)]
+			  }):
+				  frappe.throw(_("User {0} is already assigned to a meeting at the same time.".format(attendee.attendee)))
+
+
 	def sync_todos(self):
 		"""Sync ToDos for assignments"""
 		todos_added = [todo.name for todo in
